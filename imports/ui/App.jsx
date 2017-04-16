@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types'
 import {createContainer} from 'meteor/react-meteor-data';
 
 import {Vacancies} from '../api/vacancies.js';
@@ -15,14 +16,8 @@ class App extends Component {
 
     render() {
         return (
-            <div className="container">
-                <header>
-                    <h1>Удалённая работа в IT ({this.props.count})</h1>
-                </header>
-
-                <ul>
-                    {this.renderVacancies()}
-                </ul>
+            <div className="row">
+                {this.renderVacancies()}
             </div>
         );
     }
