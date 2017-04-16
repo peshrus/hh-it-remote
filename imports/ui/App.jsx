@@ -1,39 +1,42 @@
-import React, { Component, PropTypes } from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
- 
-import { Tasks } from '../api/tasks.js';
- 
-import Task from './Task.jsx';
- 
+import React, {Component, PropTypes} from 'react';
+import {createContainer} from 'meteor/react-meteor-data';
+
+import {Vacancies} from '../api/vacancies.js';
+
+import Vacancy from './Vacancy.jsx';
+
 // App component - represents the whole app
 class App extends Component {
-  renderTasks() {
-    return this.props.tasks.map((task) => (
-      <Task key={task._id} task={task} />
-    ));
-  }
- 
-  render() {
-    return (
-      <div className="container">
-        <header>
-          <h1>Todo List</h1>
-        </header>
- 
-        <ul>
-          {this.renderTasks()}
-        </ul>
-      </div>
-    );
-  }
-};
+    renderVacancies() {
+        return this.props.vacancies.map((vacancy) => (
+            <Vacancy key={vacancy._id} vacancy={vacancy}/>
+        ));
+    }
+
+    render() {
+        return (
+            <div className="container">
+                <header>
+                    <h1>Удалённая работа в IT ({this.props.count})</h1>
+                </header>
+
+                <ul>
+                    {this.renderVacancies()}
+                </ul>
+            </div>
+        );
+    }
+}
 
 App.propTypes = {
-  tasks: PropTypes.array.isRequired,
+    vacancies: PropTypes.array.isRequired,
 };
- 
+
 export default createContainer(() => {
-  return {
-    tasks: Tasks.find({}).fetch(),
-  };
+    Meteor.subscribe('vacancies');
+
+    return {
+        vacancies: Vacancies.find({}, {sort: {inserted: 1}}).fetch(),
+        count: Vacancies.find({}).count()
+    };
 }, App);
