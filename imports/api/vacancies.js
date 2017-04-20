@@ -36,7 +36,9 @@ function callHh(page = 0) {
         (error, result) => {
             if (!error) {
                 result.data.items.map(item => Vacancies.insert({
-                    salary: item.salary ? (item.salary.from + ' - ' + item.salary.to + ' ' + item.salary.currency) : '',
+                    salary: item.salary ? (((item.salary.from && item.salary.to) ? (item.salary.from + ' - ' + item.salary.to) : (item.salary.from ? 'от ' + item.salary.from : 'до ' + item.salary.to)) + ' ' + item.salary.currency) : '',
+                    requirement: item.snippet ? item.snippet.requirement : '',
+                    responsibility: item.snippet ? item.snippet.responsibility : '',
                     name: item.name,
                     area: item.area ? item.area.name : '',
                     employer: item.employer ? item.employer.name : '',

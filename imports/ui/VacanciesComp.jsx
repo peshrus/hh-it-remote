@@ -7,7 +7,7 @@ import {Vacancies} from '../api/vacancies.js';
 import Vacancy from './Vacancy.jsx';
 
 // App component - represents the whole app
-class App extends Component {
+class VacanciesComp extends Component {
     renderVacancies() {
         return this.props.vacancies.map((vacancy) => (
             <Vacancy key={vacancy._id} vacancy={vacancy}/>
@@ -23,7 +23,7 @@ class App extends Component {
     }
 }
 
-App.propTypes = {
+VacanciesComp.propTypes = {
     vacancies: PropTypes.array.isRequired,
 };
 
@@ -31,7 +31,7 @@ export default createContainer(() => {
     Meteor.subscribe('vacancies');
 
     return {
-        vacancies: Vacancies.find({}, {sort: {inserted: 1}}).fetch(),
+        vacancies: Vacancies.find({}, {sort: {inserted: 1}, limit: Session.get("vacanciesLimit")}).fetch(),
         count: Vacancies.find({}).count()
     };
-}, App);
+}, VacanciesComp);
