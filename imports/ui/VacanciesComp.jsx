@@ -31,7 +31,6 @@ export default createContainer(() => {
     Meteor.subscribe('vacancies');
 
     return {
-        vacancies: Vacancies.find({}, {sort: {inserted: 1}, limit: Session.get("vacanciesLimit")}).fetch(),
-        count: Vacancies.find({}).count()
+        vacancies: Vacancies.find({}, {sort: {inserted: 1}, limit: Session.get('vacanciesLimit')}).fetch(),
     };
 }, VacanciesComp);

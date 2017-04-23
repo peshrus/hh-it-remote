@@ -18,5 +18,14 @@ h2 {
 }
 
 #vacancies {
-    margin-top: 60px;
+    margin-top: 70px;
+    padding-bottom: 70px;
+}
+
+#vacancies-num {
+    margin-right: 15px;
+}
+
+#specializations .navbar-text {
+    margin-left: 0;
 }

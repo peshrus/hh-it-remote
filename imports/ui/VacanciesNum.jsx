@@ -8,7 +8,7 @@ import {Vacancies} from '../api/vacancies.js';
 class VacanciesNum extends Component {
     render() {
         return (
-            <p className="navbar-text navbar-right">Найдено вакансий на <a href="https://hh.ru/" target="_blank" className="navbar-link">hh.ru</a>: <span id="vacancies-num" className="label label-success">{this.props.count}</span></p>
+            <p className="navbar-text navbar-right">Найдено вакансий на <a href="https://hh.ru/" target="_blank" className="navbar-link">hh.ru</a>: <span className="label label-success">{this.props.count}</span></p>
         );
     }
 }

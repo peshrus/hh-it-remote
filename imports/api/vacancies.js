@@ -1,26 +1,20 @@
+import {apiHost, userAgent, specializationsStr} from './const';
 import {Mongo} from 'meteor/mongo';
 import {HTTP} from 'meteor/http';
 import {Meteor} from 'meteor/meteor';
 
 export const Vacancies = new Mongo.Collection('vacancies');
 
-if (Meteor.isServer) {
-    // This code only runs on the server
-    Meteor.publish('vacancies', function vacanciesPublication() {
-        return Vacancies.find();
-    });
-}
-
 export function refreshVacancies() {
     console.log('Refresh vacancies...');
     Vacancies.remove({});
-    callHh();
+    fetchHhVacancies();
 }
 
-function callHh(page = 0) {
+function fetchHhVacancies(page = 0) {
     HTTP.call(
         'GET',
-        'https://api.hh.ru/vacancies',
+        apiHost + 'vacancies',
         {
             params: {
                 'schedule': 'remote',
@@ -29,27 +23,27 @@ function callHh(page = 0) {
                 'page': page
             },
             headers: {
-                'User-Agent': 'hh-it-remote.ru'
+                'User-Agent': userAgent
             },
-            query: 'employment=full&employment=part&employment=project&specialization=1.474&specialization=1.9&specialization=1.82&specialization=1.89&specialization=1.113&specialization=1.221&specialization=1.270&specialization=1.272&specialization=1.274&specialization=1.277&specialization=1.295'
+            query: 'employment=full&employment=part&employment=project&' + specializationsStr
         },
         (error, result) => {
             if (!error) {
-                result.data.items.map(item => Vacancies.insert({
-                    salary: item.salary ? (((item.salary.from && item.salary.to) ? (item.salary.from + ' - ' + item.salary.to) : (item.salary.from ? 'от ' + item.salary.from : 'до ' + item.salary.to)) + ' ' + item.salary.currency) : '',
-                    requirement: item.snippet ? item.snippet.requirement : '',
-                    responsibility: item.snippet ? item.snippet.responsibility : '',
-                    name: item.name,
-                    area: item.area ? item.area.name : '',
-                    employer: item.employer ? item.employer.name : '',
-                    employer_url: item.employer ? item.employer.alternate_url : '#',
-                    url: item.alternate_url,
+                result.data.items.map(hhVacancy => Vacancies.insert({
+                    salary: hhVacancy.salary,
+                    requirement: hhVacancy.snippet ? hhVacancy.snippet.requirement : '',
+                    responsibility: hhVacancy.snippet ? hhVacancy.snippet.responsibility : '',
+                    name: hhVacancy.name,
+                    area: hhVacancy.area ? hhVacancy.area.name : '',
+                    employer: hhVacancy.employer ? hhVacancy.employer.name : '',
+                    employer_url: hhVacancy.employer ? hhVacancy.employer.alternate_url : '#',
+                    url: hhVacancy.alternate_url,
                     inserted: new Date()
                 }));
 
                 const nextPage = result.data.page + 1;
                 if (nextPage < result.data.pages) {
-                    callHh(nextPage);
+                    fetchHhVacancies(nextPage);
                 } else {
                     Meteor.setTimeout(refreshVacancies, 60000);
                 }
