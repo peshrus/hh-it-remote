@@ -1,6 +1,6 @@
 import {Meteor} from 'meteor/meteor';
-import {Vacancies, refreshVacancies} from '../imports/api/vacancies.js';
-import {Specializations, getSpecializations} from '../imports/api/specializations.js';
+import {refreshVacancies, Vacancies} from '../imports/api/vacancies.js';
+import {getSpecializations, Specializations} from '../imports/api/specializations.js';
 
 Meteor.startup(() => {
     refreshVacancies();

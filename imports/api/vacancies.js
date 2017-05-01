@@ -1,4 +1,4 @@
-import {apiHost, userAgent, specializationsStr} from './const';
+import {apiHost, specializationsStr, userAgent} from './const';
 import {Mongo} from 'meteor/mongo';
 import {HTTP} from 'meteor/http';
 import {Meteor} from 'meteor/meteor';
@@ -38,7 +38,7 @@ function fetchHhVacancies(page = 0) {
                     employer: hhVacancy.employer ? hhVacancy.employer.name : '',
                     employer_url: hhVacancy.employer ? hhVacancy.employer.alternate_url : '#',
                     url: hhVacancy.alternate_url,
-                    inserted: new Date()
+                    insertedAt: new Date()
                 }));
 
                 const nextPage = result.data.page + 1;

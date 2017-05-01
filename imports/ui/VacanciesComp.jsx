@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import {createContainer} from 'meteor/react-meteor-data';
 
 import {Vacancies} from '../api/vacancies.js';
@@ -24,13 +24,13 @@ class VacanciesComp extends Component {
 }
 
 VacanciesComp.propTypes = {
-    vacancies: PropTypes.array.isRequired,
+    vacancies: PropTypes.array.isRequired
 };
 
 export default createContainer(() => {
     Meteor.subscribe('vacancies');
 
     return {
-        vacancies: Vacancies.find({}, {sort: {inserted: 1}, limit: Session.get('vacanciesLimit')}).fetch(),
+        vacancies: Vacancies.find({}, {sort: {insertedAt: 1}, limit: Session.get('vacanciesLimit')}).fetch(),
     };
 }, VacanciesComp);

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import {createContainer} from 'meteor/react-meteor-data';
 
 import {Specializations} from '../api/specializations.js';
@@ -16,19 +16,27 @@ class SpecializationsComp extends Component {
 
     render() {
         return (
-            <p className="navbar-text navbar-left">{this.renderSpecializations()}</p>
+            <li className="dropdown">
+                <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                   aria-expanded="false">Специализация <span className="caret"></span></a>
+                <ul className="dropdown-menu">
+                    <li className="active"><a href="#">Все</a></li>
+                    <li role="separator" className="divider"></li>
+                    {this.renderSpecializations()}
+                </ul>
+            </li>
         );
     }
 }
 
 SpecializationsComp.propTypes = {
-    specializations: PropTypes.array.isRequired,
+    specializations: PropTypes.array.isRequired
 };
 
 export default createContainer(() => {
     Meteor.subscribe('specializations');
 
     return {
-        specializations: Specializations.find({}/*, {sort: {name: 1}}*/).fetch(),
+        specializations: Specializations.find({}, {sort: {name: 1}}).fetch(),
     };
 }, SpecializationsComp);

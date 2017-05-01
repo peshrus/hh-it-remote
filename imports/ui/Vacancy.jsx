@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
 // Vacancy component - represents a single vacancy
 export default class Vacancy extends Component {
@@ -27,8 +27,12 @@ export default class Vacancy extends Component {
             <div className="col-xs-12 col-md-4" id={this.props.vacancy._id}>
                 <div className="thumbnail">
                     <div className="caption">
-                        <h2><a href={this.props.vacancy.url} target="_blank">{this.props.vacancy.name}</a></h2>
-                        <p><span className="label label-success">{salary}</span> {this.props.vacancy.employer && <a href={this.props.vacancy.employer_url} target="_blank"><span className="label label-primary">{this.props.vacancy.employer}</span></a>} {this.props.vacancy.area && <span className="label label-info">{this.props.vacancy.area}</span>}</p>
+                        <h2><a href={this.props.vacancy.url} target="_blank"
+                               rel="external">{this.props.vacancy.name}</a></h2>
+                        <p><span className="label label-success">{salary}</span> {this.props.vacancy.employer &&
+                        <a href={this.props.vacancy.employer_url} target="_blank"><span
+                            className="label label-primary">{this.props.vacancy.employer}</span></a>} {this.props.vacancy.area &&
+                        <span className="label label-info">{this.props.vacancy.area}</span>}</p>
                         <p>{this.props.vacancy.requirement}</p>
                         <p>{this.props.vacancy.responsibility}</p>
                     </div>

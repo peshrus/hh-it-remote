@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
 export default class Specialization extends Component {
     render() {
         return (
-
-            <span id={this.props.specialization._id} className="label label-warning">{this.props.specialization.name}</span>
+            <li><a id={this.props.specialization.hh_id} href={'/' + this.props.specialization.hh_id}>{this.props.specialization.name}</a></li>
         );
     }
 }

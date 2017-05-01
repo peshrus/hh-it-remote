@@ -1,3 +1,7 @@
+body {
+    padding: 70px 0;
+}
+
 h1 {
     margin: 0;
 }
@@ -17,15 +21,6 @@ h2 {
     text-decoration: none;
 }
 
-#vacancies {
-    margin-top: 70px;
-    padding-bottom: 70px;
-}
-
-#vacancies-num {
-    margin-right: 15px;
-}
-
-#specializations .navbar-text {
+.navbar-fixed-bottom .navbar-text {
     margin-left: 0;
 }

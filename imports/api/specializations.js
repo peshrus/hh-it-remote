@@ -1,4 +1,4 @@
-import {apiHost, userAgent, specializationsStr} from './const';
+import {apiHost, specializationsStr, userAgent} from './const';
 import {Mongo} from 'meteor/mongo';
 import {HTTP} from 'meteor/http';
 
@@ -28,6 +28,7 @@ function fetchHhSpecializations() {
                 result.data.map(profession => profession.specializations.map(specialization => {
                     if (specializationsArr.indexOf(specialization.id) >= 0) {
                         Specializations.insert({
+                            hh_id: specialization.id,
                             name: specialization.name
                         });
                     }

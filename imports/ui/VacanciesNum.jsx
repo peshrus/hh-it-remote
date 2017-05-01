@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import {createContainer} from 'meteor/react-meteor-data';
 
 import {Vacancies} from '../api/vacancies.js';
@@ -8,13 +8,13 @@ import {Vacancies} from '../api/vacancies.js';
 class VacanciesNum extends Component {
     render() {
         return (
-            <p className="navbar-text navbar-right">Найдено вакансий на <a href="https://hh.ru/" target="_blank" className="navbar-link">hh.ru</a>: <span className="label label-success">{this.props.count}</span></p>
+            <span>{this.props.count}</span>
         );
     }
 }
 
 VacanciesNum.propTypes = {
-    count: PropTypes.number.isRequired,
+    count: PropTypes.number.isRequired
 };
 
 export default createContainer(() => {
