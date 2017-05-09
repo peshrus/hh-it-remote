@@ -6,10 +6,11 @@ import {mount, withOptions} from 'react-mounter';
 import VacanciesComp from '../imports/ui/VacanciesComp.jsx';
 import VacanciesNum from '../imports/ui/VacanciesNum.jsx';
 import SpecializationsComp from '../imports/ui/SpecializationsComp.jsx';
+import Search from '../imports/ui/Search.jsx';
 
 FlowRouter.route('/', {
     name: 'Vacancies.show',
-    action() {
+    action(params, queryParams) {
         const mount1 = withOptions({
             rootId: 'vacancies',
         }, mount);
@@ -24,6 +25,11 @@ FlowRouter.route('/', {
             rootId: 'specializations',
         }, mount);
         mount3(SpecializationsComp, {main: <SpecializationsComp/>});
+
+        const mount4 = withOptions({
+            rootId: 'search',
+        }, mount);
+        mount4(Search, {main: <Search/>});
     }
 });
 

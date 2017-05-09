@@ -45,7 +45,7 @@ function fetchHhVacancies(page = 0) {
                 if (nextPage < result.data.pages) {
                     fetchHhVacancies(nextPage);
                 } else {
-                    Meteor.setTimeout(refreshVacancies, 60000);
+                    Meteor.setTimeout(refreshVacancies, 3600000);
                 }
             } else {
                 console.log(error);

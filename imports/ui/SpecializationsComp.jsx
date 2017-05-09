@@ -20,7 +20,7 @@ class SpecializationsComp extends Component {
                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                    aria-expanded="false">Специализация <span className="caret"></span></a>
                 <ul className="dropdown-menu">
-                    <li className="active"><a href="#">Все</a></li>
+                    <li className="active"><a href="/">Все</a></li>
                     <li role="separator" className="divider"></li>
                     {this.renderSpecializations()}
                 </ul>

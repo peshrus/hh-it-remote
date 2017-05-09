@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {createContainer} from 'meteor/react-meteor-data';
+import {FlowRouter} from 'meteor/kadira:flow-router';
 
 import {Vacancies} from '../api/vacancies.js';
 
@@ -29,8 +30,22 @@ VacanciesComp.propTypes = {
 
 export default createContainer(() => {
     Meteor.subscribe('vacancies');
+    let filter = new RegExp(FlowRouter.getQueryParam('filter'), 'ig');
 
     return {
-        vacancies: Vacancies.find({}, {sort: {insertedAt: 1}, limit: Session.get('vacanciesLimit')}).fetch(),
+        vacancies: Vacancies.find(
+            {
+                $or: [
+                    {name: filter},
+                    {requirement: filter},
+                    {responsibility: filter},
+                    {area: filter},
+                    {employer: filter}
+                ]
+            }, {
+                sort: {insertedAt: 1},
+                limit: Session.get('vacanciesLimit')
+            }
+        ).fetch(),
     };
 }, VacanciesComp);
