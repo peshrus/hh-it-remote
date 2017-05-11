@@ -6,7 +6,7 @@ import {createContainer} from 'meteor/react-meteor-data';
 class Search extends Component {
     render() {
         return (
-            <form onSubmit={this.applyFilter.bind(this)}>
+            <form className="navbar-form" onSubmit={this.applyFilter.bind(this)}>
                 <div className="form-group">
                     <input type="text" ref="filter" className="form-control" placeholder="Ключевые слова"
                            defaultValue={FlowRouter.getQueryParam('filter')}/>

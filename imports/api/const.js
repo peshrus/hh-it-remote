@@ -1,6 +1,25 @@
 export const apiHost = 'https://api.hh.ru/';
 export const userAgent = 'hh-it-remote.ru';
-export const specializationsStr = 'specialization=1.10&specialization=1.110&specialization=1.203&specialization=1.221&specialization=1.270&specialization=1.272&specialization=1.274&specialization=1.277&specialization=1.295&specialization=1.3&specialization=1.395&specialization=1.474&specialization=1.475&specialization=1.50&specialization=1.536&specialization=1.82&specialization=1.9';
+//export const specializationsStr = 'specialization=1.10&specialization=1.110&specialization=1.203&specialization=1.221&specialization=1.270&specialization=1.272&specialization=1.274&specialization=1.277&specialization=1.295&specialization=1.3&specialization=1.395&specialization=1.474&specialization=1.475&specialization=1.50&specialization=1.536&specialization=1.82&specialization=1.9';
+export const specializationsStrArr = [
+    'specialization=1.10',
+    'specialization=1.110',
+    'specialization=1.203',
+    'specialization=1.221',
+    'specialization=1.270',
+    'specialization=1.272',
+    'specialization=1.274',
+    'specialization=1.277',
+    'specialization=1.295',
+    'specialization=1.3',
+    'specialization=1.395',
+    'specialization=1.474',
+    'specialization=1.475',
+    'specialization=1.50',
+    'specialization=1.536',
+    'specialization=1.82',
+    'specialization=1.9'
+];
 
 /*
  {

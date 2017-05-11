@@ -8,36 +8,39 @@ import VacanciesNum from '../imports/ui/VacanciesNum.jsx';
 import SpecializationsComp from '../imports/ui/SpecializationsComp.jsx';
 import Search from '../imports/ui/Search.jsx';
 
+function mountComponents() {
+    const vacanciesMount = withOptions({
+        rootId: 'vacancies',
+    }, mount);
+    vacanciesMount(VacanciesComp, {main: <VacanciesComp/>});
+
+    const vacanciesNumMount = withOptions({
+        rootId: 'vacancies-num',
+    }, mount);
+    vacanciesNumMount(VacanciesNum, {main: <VacanciesNum/>});
+
+    const specializationsMount = withOptions({
+        rootId: 'specializations',
+    }, mount);
+    specializationsMount(SpecializationsComp, {main: <SpecializationsComp/>});
+
+    const searchMount = withOptions({
+        rootId: 'search',
+    }, mount);
+    searchMount(Search, {main: <Search/>});
+}
+
 FlowRouter.route('/', {
     name: 'Vacancies.show',
-    action(params, queryParams) {
-        const mount1 = withOptions({
-            rootId: 'vacancies',
-        }, mount);
-        mount1(VacanciesComp, {main: <VacanciesComp/>});
-
-        const mount2 = withOptions({
-            rootId: 'vacancies-num',
-        }, mount);
-        mount2(VacanciesNum, {main: <VacanciesNum/>});
-
-        const mount3 = withOptions({
-            rootId: 'specializations',
-        }, mount);
-        mount3(SpecializationsComp, {main: <SpecializationsComp/>});
-
-        const mount4 = withOptions({
-            rootId: 'search',
-        }, mount);
-        mount4(Search, {main: <Search/>});
+    action() {
+        mountComponents();
     }
 });
 
-FlowRouter.route('/:_id', {
+FlowRouter.route('/:specId', {
     name: 'Vacancies.specialization.show',
-    action(params, queryParams) {
-        console.log("Specialization: " + params._id);
-        //Session.set('vacanciesSpecialization', params._id);
+    action() {
+        mountComponents();
     }
 });
 

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {createContainer} from 'meteor/react-meteor-data';
+import {FlowRouter} from 'meteor/kadira:flow-router';
 
 import {Specializations} from '../api/specializations.js';
 
@@ -20,7 +21,7 @@ class SpecializationsComp extends Component {
                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                    aria-expanded="false">Специализация <span className="caret"></span></a>
                 <ul className="dropdown-menu">
-                    <li className="active"><a href="/">Все</a></li>
+                    {FlowRouter.getParam('specId') ? <li><a href="/">Все</a></li> : <li className="active"><a href="/">Все</a></li>}
                     <li role="separator" className="divider"></li>
                     {this.renderSpecializations()}
                 </ul>

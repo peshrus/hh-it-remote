@@ -19,19 +19,32 @@ VacanciesNum.propTypes = {
 
 export default createContainer(() => {
     Meteor.subscribe('vacancies');
-    let filter = new RegExp(FlowRouter.getQueryParam('filter'), 'ig');
+    let query = {};
+
+    if (FlowRouter.getQueryParam('filter')) {
+        let filter = new RegExp(FlowRouter.getQueryParam('filter'), 'ig');
+        if (!query.$and) {
+            query.$and = [];
+        }
+        query.$and.push({
+            $or: [
+                {name: filter},
+                {requirement: filter},
+                {responsibility: filter},
+                {area: filter},
+                {employer: filter}
+            ]
+        });
+    }
+
+    if (FlowRouter.getParam('specId')) {
+        if (!query.$and) {
+            query.$and = [];
+        }
+        query.$and.push({specialization: FlowRouter.getParam('specId')});
+    }
 
     return {
-        count: Vacancies.find(
-            {
-                $or: [
-                    {name: filter},
-                    {requirement: filter},
-                    {responsibility: filter},
-                    {area: filter},
-                    {employer: filter}
-                ]
-            }
-        ).count()
+        count: Vacancies.find(query).count()
     };
 }, VacanciesNum);
