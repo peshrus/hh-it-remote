@@ -1,4 +1,4 @@
-import {apiHost, specializationsStrArr, userAgent} from './const';
+import {apiHost, specializationsStr, userAgent} from './const';
 import {Mongo} from 'meteor/mongo';
 import {HTTP} from 'meteor/http';
 import {Meteor} from 'meteor/meteor';
@@ -7,7 +7,7 @@ export const Vacancies = new Mongo.Collection('vacancies');
 
 export function refreshVacancies() {
     console.log('Refresh vacancies...');
-    specializationsStrArr.forEach(specializationStr => fetchHhVacancies(specializationStr));
+    fetchHhVacancies(specializationsStr);
     Meteor.setTimeout(refreshVacancies, 3600000);
 }
 
@@ -29,9 +29,11 @@ function fetchHhVacancies(specializationStr, page = 0) {
         (error, result) => {
             if (!error) {
                 result.data.items.map(hhVacancy => {
-                        Vacancies.upsert(
-                            {hh_id: hhVacancy.id},
-                            {
+                        let specializationStrParts = specializationStr.split('=');
+                        let modifier;
+
+                        if (specializationStrParts.length !== 2) {
+                            modifier = {
                                 $set: {
                                     hh_id: hhVacancy.id,
                                     salary: hhVacancy.salary,
@@ -42,11 +44,18 @@ function fetchHhVacancies(specializationStr, page = 0) {
                                     employer: hhVacancy.employer ? hhVacancy.employer.name : '',
                                     employer_url: hhVacancy.employer ? hhVacancy.employer.alternate_url : '#',
                                     url: hhVacancy.alternate_url,
+                                    hh_page: result.data.page ? result.data.page : 0,
                                     insertedAt: new Date()
-                                },
-                                $push: {specialization: specializationStr.split('=')[1]}
-                            }
-                        );
+                                }
+                            };
+                        } else {
+                            modifier = {
+                                $set: {hh_id: hhVacancy.id},
+                                $push: {specialization: specializationStrParts[1]}
+                            };
+                        }
+
+                        Vacancies.upsert({hh_id: hhVacancy.id}, modifier);
                     }
                 );
 
@@ -55,6 +64,8 @@ function fetchHhVacancies(specializationStr, page = 0) {
                     while (nextPage < result.data.pages) {
                         fetchHhVacancies(specializationStr, nextPage++);
                     }
+                } else if (nextPage === result.data.pages && specializationStr.indexOf('&') >= 0) {
+                    specializationStr.split('&').forEach(specializationStr => fetchHhVacancies(specializationStr)); // setting of specializations
                 }
             } else {
                 console.log(error);

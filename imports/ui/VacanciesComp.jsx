@@ -56,6 +56,6 @@ export default createContainer(() => {
     }
 
     return {
-        vacancies: Vacancies.find(query, {sort: {insertedAt: 1}, limit: Session.get('vacanciesLimit')}).fetch(),
+        vacancies: Vacancies.find(query, {sort: {hh_page: 1, insertedAt: 1}, limit: Session.get('vacanciesLimit')}).fetch(),
     };
 }, VacanciesComp);

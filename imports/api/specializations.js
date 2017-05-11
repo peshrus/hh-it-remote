@@ -1,4 +1,4 @@
-import {apiHost, specializationsStrArr, userAgent} from './const';
+import {apiHost, specializationsStr, userAgent} from './const';
 import {Mongo} from 'meteor/mongo';
 import {HTTP} from 'meteor/http';
 
@@ -22,7 +22,7 @@ function fetchHhSpecializations() {
         },
         (error, result) => {
             if (!error) {
-                let specializationsArr = specializationsStrArr.map(specKeyValue => specKeyValue.split('=')[1]);
+                let specializationsArr = specializationsStr.split('&').map(specKeyValue => specKeyValue.split('=')[1]);
                 console.log('Requested specializations: ' + specializationsArr);
 
                 result.data.map(profession => profession.specializations.map(specialization => {
