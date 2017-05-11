@@ -21,7 +21,9 @@ class SpecializationsComp extends Component {
                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                    aria-expanded="false">Специализация <span className="caret"></span></a>
                 <ul className="dropdown-menu">
-                    {FlowRouter.getParam('specId') ? <li><a href="/">Все</a></li> : <li className="active"><a href="/">Все</a></li>}
+                    <li className={FlowRouter.getParam('specId') ? '' : 'active'}>
+                        <a href={'/' + (FlowRouter.getQueryParam('filter') ? '?filter=' + encodeURIComponent(FlowRouter.getQueryParam('filter')) : '')}>Все</a>
+                    </li>
                     <li role="separator" className="divider"></li>
                     {this.renderSpecializations()}
                 </ul>
