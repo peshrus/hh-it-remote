@@ -13,63 +13,61 @@ export function refreshVacancies() {
 
 function fetchHhVacancies(specializationStr, page = 0) {
     console.log('Fetch vacancies page: ' + page + ' (' + specializationStr + ')');
-    HTTP.call(
-        'GET',
-        apiHost + 'vacancies',
-        {
-            params: {
-                'schedule': 'remote',
-                'order_by': 'salary_desc',
-                'per_page': '500',
-                'page': page
-            },
-            headers: {'User-Agent': userAgent},
-            query: 'employment=full&employment=part&employment=project&' + specializationStr
-        },
-        (error, result) => {
-            if (!error) {
-                result.data.items.map(hhVacancy => {
-                        let specializationStrParts = specializationStr.split('=');
-                        let modifier;
-
-                        if (specializationStrParts.length !== 2) {
-                            modifier = {
-                                $set: {
-                                    hh_id: hhVacancy.id,
-                                    salary: hhVacancy.salary,
-                                    requirement: hhVacancy.snippet ? hhVacancy.snippet.requirement : '',
-                                    responsibility: hhVacancy.snippet ? hhVacancy.snippet.responsibility : '',
-                                    name: hhVacancy.name,
-                                    area: hhVacancy.area ? hhVacancy.area.name : '',
-                                    employer: hhVacancy.employer ? hhVacancy.employer.name : '',
-                                    employer_url: hhVacancy.employer ? hhVacancy.employer.alternate_url : '#',
-                                    url: hhVacancy.alternate_url,
-                                    hh_page: result.data.page ? result.data.page : 0,
-                                    insertedAt: new Date()
-                                }
-                            };
-                        } else {
-                            modifier = {
-                                $set: {hh_id: hhVacancy.id},
-                                $push: {specialization: specializationStrParts[1]}
-                            };
-                        }
-
-                        Vacancies.upsert({hh_id: hhVacancy.id}, modifier);
-                    }
-                );
-
-                let nextPage = result.data.page + 1;
-                if (nextPage === 1) {
-                    while (nextPage < result.data.pages) {
-                        fetchHhVacancies(specializationStr, nextPage++);
-                    }
-                } else if (nextPage === result.data.pages && specializationStr.indexOf('&') >= 0) {
-                    specializationStr.split('&').forEach(specializationStr => fetchHhVacancies(specializationStr)); // setting of specializations
-                }
-            } else {
-                console.log(error);
+    try {
+        let result = HTTP.get(
+            apiHost + 'vacancies',
+            {
+                params: {
+                    'schedule': 'remote',
+                    'order_by': 'salary_desc',
+                    'per_page': '500',
+                    'page': page
+                },
+                headers: {'User-Agent': userAgent},
+                query: 'employment=full&employment=part&employment=project&' + specializationStr
             }
+        );
+
+        result.data.items.map(hhVacancy => {
+                let specializationStrParts = specializationStr.split('=');
+                let modifier;
+
+                if (specializationStrParts.length !== 2) {
+                    modifier = {
+                        $set: {
+                            hh_id: hhVacancy.id,
+                            salary: hhVacancy.salary,
+                            requirement: hhVacancy.snippet ? hhVacancy.snippet.requirement : '',
+                            responsibility: hhVacancy.snippet ? hhVacancy.snippet.responsibility : '',
+                            name: hhVacancy.name,
+                            area: hhVacancy.area ? hhVacancy.area.name : '',
+                            employer: hhVacancy.employer ? hhVacancy.employer.name : '',
+                            employer_url: hhVacancy.employer ? hhVacancy.employer.alternate_url : '#',
+                            url: hhVacancy.alternate_url,
+                            hh_page: result.data.page ? result.data.page : 0,
+                            insertedAt: new Date()
+                        }
+                    };
+                } else {
+                    modifier = {
+                        $set: {hh_id: hhVacancy.id},
+                        $push: {specialization: specializationStrParts[1]}
+                    };
+                }
+
+                Vacancies.upsert({hh_id: hhVacancy.id}, modifier);
+            }
+        );
+
+        let nextPage = result.data.page + 1;
+        if (nextPage === 1) {
+            while (nextPage < result.data.pages) {
+                fetchHhVacancies(specializationStr, nextPage++);
+            }
+        } else if (nextPage === result.data.pages && specializationStr.indexOf('&') >= 0) {
+            specializationStr.split('&').forEach(specializationStr => fetchHhVacancies(specializationStr)); // setting of specializations
         }
-    );
+    } catch (e) {
+        console.log(e);
+    }
 }
