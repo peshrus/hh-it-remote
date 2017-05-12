@@ -24,3 +24,7 @@ h2 {
 .navbar-fixed-bottom .navbar-text {
     margin-left: 0;
 }
+
+.form-group {
+    margin-right: 5px;
+}

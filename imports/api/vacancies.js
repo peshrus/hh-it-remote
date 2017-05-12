@@ -11,6 +11,14 @@ export function refreshVacancies() {
     Meteor.setTimeout(refreshVacancies, 3600000);
 }
 
+let hhLink = 'https://hh.ru';
+
+Meteor.methods({
+    'getHhLink'() {
+        return hhLink;
+    }
+});
+
 function fetchHhVacancies(specializationStr, page = 0) {
     console.log('Fetch vacancies page: ' + page + ' (' + specializationStr + ')');
     try {
@@ -61,6 +69,10 @@ function fetchHhVacancies(specializationStr, page = 0) {
 
         let nextPage = result.data.page + 1;
         if (nextPage === 1) {
+            if (specializationStr.indexOf('&') >= 0) {
+                hhLink = result.data.alternate_url;
+            }
+
             while (nextPage < result.data.pages) {
                 fetchHhVacancies(specializationStr, nextPage++);
             }
