@@ -7,35 +7,26 @@ export const Specializations = new Mongo.Collection('specializations');
 export function getSpecializations() {
     console.log('Get specializations...');
     Specializations.remove({});
-    fetchHhSpecializations();
+    return fetchHhSpecializations();
 }
 
 
 function fetchHhSpecializations() {
-    HTTP.call(
-        'GET',
-        apiHost + 'specializations',
-        {
-            headers: {
-                'User-Agent': userAgent
-            }
-        },
-        (error, result) => {
-            if (!error) {
-                let specializationsArr = specializationsStr.split('&').map(specKeyValue => specKeyValue.split('=')[1]);
-                console.log('Requested specializations: ' + specializationsArr);
+    return new Promise((resolve, reject) => {
+        let result = HTTP.get(apiHost + 'specializations', {headers: {'User-Agent': userAgent}});
 
-                result.data.map(profession => profession.specializations.map(specialization => {
-                    if (specializationsArr.indexOf(specialization.id) >= 0) {
-                        Specializations.insert({
-                            hh_id: specialization.id,
-                            name: specialization.name
-                        });
-                    }
-                }));
-            } else {
-                console.log(error);
+        let specializationsArr = specializationsStr.split('&').map(specKeyValue => specKeyValue.split('=')[1]);
+        console.log('Requested specializations: ' + specializationsArr);
+
+        result.data.map(profession => profession.specializations.map(specialization => {
+            if (specializationsArr.indexOf(specialization.id) >= 0) {
+                Specializations.insert({
+                    _id: specialization.id,
+                    name: specialization.name
+                });
             }
-        }
-    );
+        }));
+
+        resolve();
+    });
 }

@@ -43,7 +43,7 @@ function fetchHhVacancies(specializationStr, page = 0) {
                 if (specializationStrParts.length !== 2) {
                     modifier = {
                         $set: {
-                            hh_id: hhVacancy.id,
+                            _id: hhVacancy.id,
                             salary: hhVacancy.salary,
                             requirement: hhVacancy.snippet ? hhVacancy.snippet.requirement : '',
                             responsibility: hhVacancy.snippet ? hhVacancy.snippet.responsibility : '',
@@ -58,12 +58,12 @@ function fetchHhVacancies(specializationStr, page = 0) {
                     };
                 } else {
                     modifier = {
-                        $set: {hh_id: hhVacancy.id},
+                        $set: {_id: hhVacancy.id},
                         $push: {specialization: specializationStrParts[1]}
                     };
                 }
 
-                Vacancies.upsert({hh_id: hhVacancy.id}, modifier);
+                Vacancies.upsert({_id: hhVacancy.id}, modifier);
             }
         );
 

@@ -5,9 +5,9 @@ import {FlowRouter} from 'meteor/kadira:flow-router';
 export default class Specialization extends Component {
     render() {
         return (
-            <li className={FlowRouter.getParam('specId') === this.props.specialization.hh_id ? 'active' : ''}><a
-                id={this.props.specialization.hh_id}
-                href={'/' + this.props.specialization.hh_id + (FlowRouter.getQueryParam('filter') ? '?filter=' + encodeURIComponent(FlowRouter.getQueryParam('filter')) : '')}>{this.props.specialization.name}</a>
+            <li className={FlowRouter.getParam('specId') === this.props.specialization._id ? 'active' : ''}><a
+                id={this.props.specialization._id}
+                href={'/' + this.props.specialization._id + (FlowRouter.getQueryParam('filter') ? '?filter=' + encodeURIComponent(FlowRouter.getQueryParam('filter')) : '')}>{this.props.specialization.name}</a>
             </li>
         );
     }
