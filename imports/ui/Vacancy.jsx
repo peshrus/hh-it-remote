@@ -28,9 +28,9 @@ export default class Vacancy extends Component {
                 <div className="thumbnail">
                     <div className="caption">
                         <h2><a href={this.props.vacancy.url} target="_blank"
-                               rel="external">{this.props.vacancy.name}</a></h2>
+                               rel="external" title="Показать вакансию на сайте hh.ru">{this.props.vacancy.name}</a></h2>
                         <p><span className="label label-success">{salary}</span> {this.props.vacancy.employer &&
-                        <a href={this.props.vacancy.employer_url} target="_blank"><span
+                        <a href={this.props.vacancy.employer_url} target="_blank" title="Показать работодателя на сайте hh.ru"><span
                             className="label label-primary">{this.props.vacancy.employer}</span></a>} {this.props.vacancy.area &&
                         <span className="label label-info">{this.props.vacancy.area}</span>}</p>
                         <p>{this.props.vacancy.requirement}</p>

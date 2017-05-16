@@ -25,6 +25,10 @@ h2 {
     margin-left: 0;
 }
 
+.navbar-fixed-bottom .navbar-text .label-success {
+    margin-left: 5px;
+}
+
 .form-group {
     margin-right: 5px;
 }

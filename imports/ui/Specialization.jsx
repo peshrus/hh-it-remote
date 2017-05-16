@@ -7,7 +7,8 @@ export default class Specialization extends Component {
         return (
             <li className={FlowRouter.getParam('specId') === this.props.specialization._id ? 'active' : ''}><a
                 id={this.props.specialization._id}
-                href={'/' + this.props.specialization._id + (FlowRouter.getQueryParam('filter') ? '?filter=' + encodeURIComponent(FlowRouter.getQueryParam('filter')) : '')}>{this.props.specialization.name}</a>
+                href={'/' + this.props.specialization._id + (FlowRouter.getQueryParam('filter') ? '?filter=' + encodeURIComponent(FlowRouter.getQueryParam('filter')) : '')}
+                title="Показать вакансии для этой специализации">{this.props.specialization.name}</a>
             </li>
         );
     }

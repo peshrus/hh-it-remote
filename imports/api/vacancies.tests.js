@@ -9,7 +9,7 @@ if (Meteor.isServer) {
     describe('vacancies', () => {
         describe('api', () => {
             it('refreshVacancies', function testRefreshVacancies() {
-                this.timeout(70000);
+                this.timeout(80000);
 
                 return refreshVacancies().then(() => {
                     assert.equal(

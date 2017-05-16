@@ -9,7 +9,8 @@ class VacanciesNum extends Component {
     render() {
         return (
             <p className="navbar-text">Найдено вакансий на <a href={this.props.hhLink} target="_blank"
-                                                              className="navbar-link">hh.ru</a>: <span
+                                                              className="navbar-link"
+                                                              title="Показать найденные вакансии на сайте hh.ru">hh.ru</a>:<span
                 className="label label-success">{this.props.count}</span></p>
         );
     }
