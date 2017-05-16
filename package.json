@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
-    "test": "spacejam test --driver-package practicalmeteor:mocha"
+    "test": "meteor test --once --driver-package dispatch:mocha"
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",
@@ -13,8 +13,5 @@
     "react-addons-pure-render-mixin": "^15.5.2",
     "react-dom": "^15.5.4",
     "react-mounter": "^1.2.0"
-  },
-  "devDependencies": {
-    "spacejam": "https://github.com/serut/spacejam/tarball/windows-suppport-rc4"
   }
 }
