@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
-    "test": "spacejam test --driver-package practicalmeteor:mocha"
+    "test": "spacejam test --driver-package=practicalmeteor:mocha"
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",
