@@ -7,9 +7,7 @@ Meteor.startup(() => {
     Vacancies.remove({});
 
     refreshVacancies();
-    getSpecializations().catch(error => {
-        console.log(error);
-    });
+    getSpecializations();
 
     Meteor.publish('vacancies', () => {
         return Vacancies.find();

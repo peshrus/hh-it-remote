@@ -7,8 +7,14 @@ export const Vacancies = new Mongo.Collection('vacancies');
 
 export function refreshVacancies() {
     console.log('Refresh vacancies...');
-    fetchHhVacancies(specializationsStr);
+    let result = new Promise((resolve, reject) => {
+        fetchHhVacancies(specializationsStr);
+        specializationsStr.split('&').forEach(specializationStr => fetchHhVacancies(specializationStr)); // setting of specializations
+        resolve();
+    });
     Meteor.setTimeout(refreshVacancies, 3600000);
+
+    return result;
 }
 
 let hhLink = 'https://hh.ru';
@@ -20,66 +26,74 @@ Meteor.methods({
 });
 
 function fetchHhVacancies(specializationStr, page = 0) {
-    console.log('Fetch vacancies page: ' + page + ' (' + specializationStr + ')');
-    try {
-        let result = HTTP.get(
-            apiHost + 'vacancies',
-            {
-                params: {
-                    'schedule': 'remote',
-                    'order_by': 'salary_desc',
-                    'per_page': '500',
-                    'page': page
-                },
-                headers: {'User-Agent': userAgent},
-                query: 'employment=full&employment=part&employment=project&' + specializationStr
-            }
-        );
+    return new Promise((resolve, reject) => {
+        try {
+            console.log('Fetch vacancies page: ' + page + ' (' + specializationStr + ')');
+            let result = HTTP.get(
+                apiHost + 'vacancies',
+                {
+                    params: {
+                        'schedule': 'remote',
+                        'order_by': 'salary_desc',
+                        'per_page': '500',
+                        'page': page
+                    },
+                    headers: {'User-Agent': userAgent},
+                    query: 'employment=full&employment=part&employment=project&' + specializationStr
+                }
+            );
 
-        result.data.items.map(hhVacancy => {
-                let specializationStrParts = specializationStr.split('=');
-                let modifier;
+            let specializationStrParts = specializationStr.split('=');
+            let allSpecVacanciesFetched = specializationStrParts.length > 2;
+            result.data.items.map(hhVacancy => {
+                    let modifier;
 
-                if (specializationStrParts.length !== 2) {
-                    modifier = {
-                        $set: {
-                            _id: hhVacancy.id,
-                            salary: hhVacancy.salary,
-                            requirement: hhVacancy.snippet ? hhVacancy.snippet.requirement : '',
-                            responsibility: hhVacancy.snippet ? hhVacancy.snippet.responsibility : '',
-                            name: hhVacancy.name,
-                            area: hhVacancy.area ? hhVacancy.area.name : '',
-                            employer: hhVacancy.employer ? hhVacancy.employer.name : '',
-                            employer_url: hhVacancy.employer ? hhVacancy.employer.alternate_url : '#',
-                            url: hhVacancy.alternate_url,
-                            hh_page: result.data.page ? result.data.page : 0,
-                            insertedAt: new Date()
-                        }
-                    };
-                } else {
-                    modifier = {
-                        $set: {_id: hhVacancy.id},
-                        $push: {specialization: specializationStrParts[1]}
-                    };
+                    if (allSpecVacanciesFetched) {
+                        modifier = {
+                            $set: {
+                                _id: hhVacancy.id,
+                                salary: hhVacancy.salary,
+                                requirement: hhVacancy.snippet ? hhVacancy.snippet.requirement : '',
+                                responsibility: hhVacancy.snippet ? hhVacancy.snippet.responsibility : '',
+                                name: hhVacancy.name,
+                                area: hhVacancy.area ? hhVacancy.area.name : '',
+                                employer: hhVacancy.employer ? hhVacancy.employer.name : '',
+                                employer_url: hhVacancy.employer ? hhVacancy.employer.alternate_url : '#',
+                                url: hhVacancy.alternate_url,
+                                hh_page: result.data.page ? result.data.page : 0,
+                                insertedAt: new Date()
+                            }
+                        };
+                    } else { // only one specialization vacancies are fetched
+                        modifier = {
+                            $set: {_id: hhVacancy.id},
+                            $addToSet: {specialization: specializationStrParts[1]}
+                        };
+                    }
+
+                    let upsertResult = Vacancies.upsert({_id: hhVacancy.id}, modifier);
+
+                    if (allSpecVacanciesFetched && !upsertResult.insertedId) {
+                        console.log('!!! Not inserted: ' + hhVacancy.id);
+                    }
+                }
+            );
+
+            let nextPage = result.data.page + 1;
+            if (nextPage === 1) {
+                if (allSpecVacanciesFetched) {
+                    hhLink = result.data.alternate_url;
+                    console.log('Found vacancies: ' + result.data.found);
                 }
 
-                Vacancies.upsert({_id: hhVacancy.id}, modifier);
-            }
-        );
-
-        let nextPage = result.data.page + 1;
-        if (nextPage === 1) {
-            if (specializationStr.indexOf('&') >= 0) {
-                hhLink = result.data.alternate_url;
+                while (nextPage < result.data.pages) {
+                    fetchHhVacancies(specializationStr, nextPage++);
+                }
             }
 
-            while (nextPage < result.data.pages) {
-                fetchHhVacancies(specializationStr, nextPage++);
-            }
-        } else if (nextPage === result.data.pages && specializationStr.indexOf('&') >= 0) {
-            specializationStr.split('&').forEach(specializationStr => fetchHhVacancies(specializationStr)); // setting of specializations
+            resolve();
+        } catch (error) {
+            console.log(error);
         }
-    } catch (e) {
-        console.log(e);
-    }
+    });
 }

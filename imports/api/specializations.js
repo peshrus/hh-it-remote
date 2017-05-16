@@ -13,20 +13,24 @@ export function getSpecializations() {
 
 function fetchHhSpecializations() {
     return new Promise((resolve, reject) => {
-        let result = HTTP.get(apiHost + 'specializations', {headers: {'User-Agent': userAgent}});
+        try {
+            let result = HTTP.get(apiHost + 'specializations', {headers: {'User-Agent': userAgent}});
 
-        let specializationsArr = specializationsStr.split('&').map(specKeyValue => specKeyValue.split('=')[1]);
-        console.log('Requested specializations: ' + specializationsArr);
+            let specializationsArr = specializationsStr.split('&').map(specKeyValue => specKeyValue.split('=')[1]);
+            console.log('Requested specializations: ' + specializationsArr);
 
-        result.data.map(profession => profession.specializations.map(specialization => {
-            if (specializationsArr.indexOf(specialization.id) >= 0) {
-                Specializations.insert({
-                    _id: specialization.id,
-                    name: specialization.name
-                });
-            }
-        }));
+            result.data.map(profession => profession.specializations.map(specialization => {
+                if (specializationsArr.indexOf(specialization.id) >= 0) {
+                    Specializations.insert({
+                        _id: specialization.id,
+                        name: specialization.name
+                    });
+                }
+            }));
 
-        resolve();
+            resolve();
+        } catch (error) {
+            console.log(error);
+        }
     });
 }
