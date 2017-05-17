@@ -1,4 +1,5 @@
 import { HTTP } from 'meteor/http';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { API_HOST, SPECIALIZATIONS_STR, USER_AGENT } from './const';
@@ -88,4 +89,33 @@ export function refreshVacancies() {
     .then(() => Promise.resolve({
       then: Meteor.setTimeout(refreshVacancies, 3600000),
     }));
+}
+
+export function makeCollectionQuery() {
+  const query = {};
+
+  if (FlowRouter.getQueryParam('filter')) {
+    const filter = new RegExp(FlowRouter.getQueryParam('filter'), 'ig');
+    if (!query.$and) {
+      query.$and = [];
+    }
+    query.$and.push({
+      $or: [
+        { name: filter },
+        { requirement: filter },
+        { responsibility: filter },
+        { area: filter },
+        { employer: filter },
+      ],
+    });
+  }
+
+  if (FlowRouter.getParam('specId')) {
+    if (!query.$and) {
+      query.$and = [];
+    }
+    query.$and.push({ specialization: FlowRouter.getParam('specId') });
+  }
+
+  return query;
 }

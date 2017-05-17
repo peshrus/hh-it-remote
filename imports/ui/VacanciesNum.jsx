@@ -1,11 +1,10 @@
 /* eslint-disable react/prefer-stateless-function,react/require-default-props,no-undef */
-import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { Vacancies } from '../api/vacancies.js';
+import { Vacancies, makeCollectionQuery } from '../api/vacancies.js';
 
 class VacanciesNum extends Component {
   render() {
@@ -30,30 +29,6 @@ VacanciesNum.propTypes = {
 
 export default createContainer(() => {
   Meteor.subscribe('vacancies');
-  const query = {};
-
-  if (FlowRouter.getQueryParam('filter')) {
-    const filter = new RegExp(FlowRouter.getQueryParam('filter'), 'ig');
-    if (!query.$and) {
-      query.$and = [];
-    }
-    query.$and.push({
-      $or: [
-        { name: filter },
-        { requirement: filter },
-        { responsibility: filter },
-        { area: filter },
-        { employer: filter },
-      ],
-    });
-  }
-
-  if (FlowRouter.getParam('specId')) {
-    if (!query.$and) {
-      query.$and = [];
-    }
-    query.$and.push({ specialization: FlowRouter.getParam('specId') });
-  }
 
   Meteor.call('getHhLink', (error, result) => {
     if (!error) {
@@ -64,7 +39,7 @@ export default createContainer(() => {
   });
 
   return {
-    count: Vacancies.find(query).count(),
+    count: Vacancies.find(makeCollectionQuery()).count(),
     hhLink: Session.get('hhLink'),
   };
 }, VacanciesNum);
