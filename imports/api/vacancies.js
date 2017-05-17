@@ -86,6 +86,6 @@ export function refreshVacancies() {
   // eslint-disable-next-line max-len
   return Promise.all(Array.of(fetchHhVacancies(SPECIALIZATIONS_STR), ...SPECIALIZATIONS_STR.split('&').map(specializationStr => fetchHhVacancies(specializationStr))))
     .then(() => Promise.resolve({
-      then: Meteor.setTimeout(refreshVacancies, 60000),
+      then: Meteor.setTimeout(refreshVacancies, 3600000),
     }));
 }
