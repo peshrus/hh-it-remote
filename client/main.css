@@ -23,12 +23,14 @@ h2 {
 
 .navbar-fixed-bottom .navbar-text {
     margin-left: 0;
+    white-space: nowrap;
 }
 
 .navbar-fixed-bottom .navbar-text .label-success {
     margin-left: 5px;
 }
 
-.form-group {
+.form-group,
+.navbar-fixed-bottom .navbar-text .label-success {
     margin-right: 5px;
 }
