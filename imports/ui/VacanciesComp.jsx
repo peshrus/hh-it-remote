@@ -1,61 +1,65 @@
-import React, {Component} from 'react';
+/* eslint-disable react/forbid-prop-types,no-undef */
+import { FlowRouter } from 'meteor/kadira:flow-router';
+import { Meteor } from 'meteor/meteor';
+import { createContainer } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
-import {createContainer} from 'meteor/react-meteor-data';
-import {FlowRouter} from 'meteor/kadira:flow-router';
+import React, { Component } from 'react';
 
-import {Vacancies} from '../api/vacancies.js';
+import { Vacancies } from '../api/vacancies.js';
 
 import Vacancy from './Vacancy.jsx';
 
-// App component - represents the whole app
 class VacanciesComp extends Component {
-    renderVacancies() {
-        return this.props.vacancies.map((vacancy) => (
-            <Vacancy key={vacancy._id} vacancy={vacancy}/>
-        ));
-    }
+  renderVacancies() {
+    return this.props.vacancies.map(vacancy => (
+      <Vacancy key={vacancy._id} vacancy={vacancy} />
+    ));
+  }
 
-    render() {
-        return (
-            <div className="row">
-                {this.renderVacancies()}
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div className="row">
+        {this.renderVacancies()}
+      </div>
+    );
+  }
 }
 
 VacanciesComp.propTypes = {
-    vacancies: PropTypes.array.isRequired
+  vacancies: PropTypes.array.isRequired,
 };
 
 export default createContainer(() => {
-    Meteor.subscribe('vacancies');
-    let query = {};
+  Meteor.subscribe('vacancies');
+  const query = {};
 
-    if (FlowRouter.getQueryParam('filter')) {
-        let filter = new RegExp(FlowRouter.getQueryParam('filter'), 'ig');
-        if (!query.$and) {
-            query.$and = [];
-        }
-        query.$and.push({
-            $or: [
-                {name: filter},
-                {requirement: filter},
-                {responsibility: filter},
-                {area: filter},
-                {employer: filter}
-            ]
-        });
+  if (FlowRouter.getQueryParam('filter')) {
+    const filter = new RegExp(FlowRouter.getQueryParam('filter'), 'ig');
+    if (!query.$and) {
+      query.$and = [];
     }
+    query.$and.push({
+      $or: [
+        { name: filter },
+        { requirement: filter },
+        { responsibility: filter },
+        { area: filter },
+        { employer: filter },
+      ],
+    });
+  }
 
-    if (FlowRouter.getParam('specId')) {
-        if (!query.$and) {
-            query.$and = [];
-        }
-        query.$and.push({specialization: FlowRouter.getParam('specId')});
+  if (FlowRouter.getParam('specId')) {
+    if (!query.$and) {
+      query.$and = [];
     }
+    query.$and.push({ specialization: FlowRouter.getParam('specId') });
+  }
 
-    return {
-        vacancies: Vacancies.find(query, {sort: {hh_page: 1, insertedAt: 1}, limit: Session.get('vacanciesLimit')}).fetch(),
-    };
+  return {
+    vacancies: Vacancies.find(query, {
+      sort: { hh_page: 1, insertedAt: 1 },
+      limit: Session.get('vacanciesLimit'),
+    }).fetch(),
+  };
 }, VacanciesComp);

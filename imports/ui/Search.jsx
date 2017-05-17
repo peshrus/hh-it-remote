@@ -1,29 +1,41 @@
-import React, {Component} from 'react';
-import {FlowRouter} from 'meteor/kadira:flow-router';
-import ReactDOM from 'react-dom';
-import {createContainer} from 'meteor/react-meteor-data';
+/* eslint-disable react/no-find-dom-node,react/no-string-refs */
+import { FlowRouter } from 'meteor/kadira:flow-router';
+import React, { Component } from 'react';
 
-class Search extends Component {
-    render() {
-        return (
-            <form className="navbar-form" onSubmit={this.applyFilter.bind(this)}>
-                <div className="form-group">
-                    <input type="text" ref="filter" className="form-control" placeholder="Ключевые слова"
-                           defaultValue={FlowRouter.getQueryParam('filter')}/>
-                </div>
-                <button type="submit" className="btn btn-default">Найти</button>
-            </form>
-        );
-    }
+export default class Search extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { filter: '' };
 
-    applyFilter(event) {
-        event.preventDefault();
+    this.handleChange = this.handleChange.bind(this);
+    this.applyFilter = this.applyFilter.bind(this);
+  }
 
-        const filter = ReactDOM.findDOMNode(this.refs.filter).value.trim();
-        FlowRouter.setQueryParams({filter: encodeURIComponent(filter)});
-    }
+  handleChange(event) {
+    this.setState({ filter: event.target.value });
+  }
+
+  applyFilter(event) {
+    event.preventDefault();
+
+    FlowRouter.setQueryParams({ filter: encodeURIComponent(this.state.filter) });
+  }
+
+  render() {
+    return (
+      <form className="navbar-form" onSubmit={this.applyFilter}>
+        <div className="form-group">
+          <input
+            type="text"
+            ref="filter"
+            className="form-control"
+            placeholder="Ключевые слова"
+            value={this.state.filter}
+            onChange={this.handleChange}
+          />
+        </div>
+        <button type="submit" className="btn btn-default">Найти</button>
+      </form>
+    );
+  }
 }
-
-export default createContainer(() => {
-    return {};
-}, Search);
