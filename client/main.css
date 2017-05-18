@@ -21,16 +21,21 @@ h2 {
     text-decoration: none;
 }
 
-.navbar-fixed-bottom .navbar-text {
+#vacancies-num .navbar-text {
     margin-left: 0;
     white-space: nowrap;
 }
 
-.navbar-fixed-bottom .navbar-text .label-success {
+#vacancies-num .label-success {
     margin-left: 5px;
 }
 
-.form-group,
-.navbar-fixed-bottom .navbar-text .label-success {
+#search .form-group,
+#vacancies-num .label-success,
+.navbar-fixed-bottom .navbar-link{
     margin-right: 5px;
+}
+
+.navbar-fixed-bottom .navbar-link {
+    margin-top: 10px;
 }
