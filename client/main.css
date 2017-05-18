@@ -32,7 +32,7 @@ h2 {
 
 #search .form-group,
 #vacancies-num .label-success,
-.navbar-fixed-bottom .navbar-link{
+.navbar-fixed-bottom .navbar-collapse .navbar-link{
     margin-right: 5px;
 }
 
