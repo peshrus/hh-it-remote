@@ -11,4 +11,17 @@ Meteor.startup(() => {
 
   Meteor.publish('vacancies', () => Vacancies.find());
   Meteor.publish('specializations', () => Specializations.find());
+
+  // Deny all client-side updates
+  Vacancies.deny({
+    insert() { return true; },
+    update() { return true; },
+    remove() { return true; },
+  });
+
+  Specializations.deny({
+    insert() { return true; },
+    update() { return true; },
+    remove() { return true; },
+  });
 });

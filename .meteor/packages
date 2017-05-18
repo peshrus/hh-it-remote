@@ -26,3 +26,4 @@ kadira:flow-router
 practicalmeteor:mocha
 dispatch:mocha
 practicalmeteor:chai
+browser-policy
