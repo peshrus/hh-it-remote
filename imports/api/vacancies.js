@@ -39,7 +39,6 @@ function fetchHhVacancies(specializationStr, page = 0) {
             if (allSpecVacanciesFetched) {
               modifier = {
                 $set: {
-                  _id: hhVacancy.id,
                   salary: hhVacancy.salary,
                   requirement: hhVacancy.snippet ? hhVacancy.snippet.requirement : '',
                   responsibility: hhVacancy.snippet ? hhVacancy.snippet.responsibility : '',
@@ -54,7 +53,6 @@ function fetchHhVacancies(specializationStr, page = 0) {
               };
             } else { // only one specialization vacancies are fetched
               modifier = {
-                $set: { _id: hhVacancy.id },
                 $addToSet: { specialization: specializationStrParts[1] },
               };
             }
@@ -86,9 +84,12 @@ export function refreshVacancies() {
   console.log('Refresh vacancies...');
   // eslint-disable-next-line max-len
   return Promise.all(Array.of(fetchHhVacancies(SPECIALIZATIONS_STR), ...SPECIALIZATIONS_STR.split('&').map(specializationStr => fetchHhVacancies(specializationStr))))
-    .then(() => Promise.resolve({
-      then: Meteor.setTimeout(refreshVacancies, 3600000),
-    }));
+    .then((resolve) => {
+      const removed = Vacancies.remove({ insertedAt: { $exists: false } });
+      console.log(`Removed: ${removed}`);
+      Meteor.setTimeout(refreshVacancies, 3600000);
+      resolve();
+    });
 }
 
 export function makeCollectionQuery() {
