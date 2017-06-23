@@ -33,11 +33,10 @@ function fetchHhVacancies(specializationStr, page = 0) {
         if (!error) {
           const specializationStrParts = specializationStr.split('=');
           const allSpecVacanciesFetched = specializationStrParts.length > 2;
-          Array.prototype.forEach.call(result.data.items, (hhVacancy) => {
-            let modifier;
 
-            if (allSpecVacanciesFetched) {
-              modifier = {
+          Array.prototype.forEach.call(result.data.items, (hhVacancy) => {
+            if (!hhVacancy.archived) {
+              const modifier = {
                 $set: {
                   salary: hhVacancy.salary,
                   requirement: hhVacancy.snippet ? hhVacancy.snippet.requirement : '',
@@ -51,13 +50,15 @@ function fetchHhVacancies(specializationStr, page = 0) {
                   insertedAt: new Date(),
                 },
               };
-            } else { // only one specialization vacancies are fetched
-              modifier = {
-                $addToSet: { specialization: specializationStrParts[1] },
-              };
-            }
 
-            Vacancies.upsert({ _id: hhVacancy.id }, modifier);
+              if (!allSpecVacanciesFetched) { // only one specialization vacancies are fetched
+                modifier.$addToSet = { specialization: specializationStrParts[1] };
+              }
+
+              Vacancies.upsert({ _id: hhVacancy.id }, modifier);
+            } else {
+              console.log(`Archived: ${hhVacancy.id}`);
+            }
           });
 
           if (allSpecVacanciesFetched && result.data.page === 0) {
