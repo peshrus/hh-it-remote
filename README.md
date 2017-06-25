@@ -28,12 +28,12 @@ Go to http://localhost:3000/
 ```sh
 docker build \
   --build-arg INSTALL_MONGO=true \ 
-  -t yourname/app .
+  -t yourname/hh-it-remote .
 ```
 
 ## Run the Docker Image
 ```sh
 docker run -d \
   -p 80:3000 \
-  yourname/app
+  yourname/hh-it-remote
 ```
