@@ -1,3 +1,4 @@
+[![Travis CI](https://travis-ci.org/peshrus/hh-it-remote.svg?branch=master)](https://travis-ci.org/peshrus/hh-it-remote)
 # hh-it-remote
 The project fetches remote IT vacancies from hh.ru. It shows them on one page allowing to filter them by specialization and keywords. The page contains only specializations interesting for developers.
 
