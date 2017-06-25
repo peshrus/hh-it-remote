@@ -85,11 +85,10 @@ export function refreshVacancies() {
   console.log('Refresh vacancies...');
   // eslint-disable-next-line max-len
   return Promise.all(Array.of(fetchHhVacancies(SPECIALIZATIONS_STR), ...SPECIALIZATIONS_STR.split('&').map(specializationStr => fetchHhVacancies(specializationStr))))
-    .then((resolve) => {
+    .then(() => {
       const removed = Vacancies.remove({ insertedAt: { $exists: false } });
       console.log(`Removed: ${removed}`);
       Meteor.setTimeout(refreshVacancies, 3600000);
-      resolve();
     });
 }
 
