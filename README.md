@@ -2,6 +2,8 @@
 # hh-it-remote
 The project fetches remote IT vacancies from hh.ru. It shows them on one page allowing to filter them by specialization and keywords. The page contains only specializations interesting for developers.
 
+![The page screenshot](./screenshot.png)
+
 ## Prerequisites
 - Meteor 1.5 (https://www.meteor.com/)
 - (**Optional**) Docker (https://www.docker.com/)
